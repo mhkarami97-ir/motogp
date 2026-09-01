@@ -16,7 +16,7 @@ async function safeFetch<T>(promise: Promise<T[]>): Promise<T[]> {
   }
 }
 
-export function useRaceDetail(sessionKey: number, isLive = false) {
+export function useRaceDetail(seasonId: string, eventId: string, isLive = false) {
   const results = ref<RaceResult[]>([])
   const grid = ref<StartingGridEntry[]>([])
   const riders = ref<Rider[]>([])
@@ -32,9 +32,9 @@ export function useRaceDetail(sessionKey: number, isLive = false) {
     error.value = null
     try {
       const [r, g, rd] = await Promise.all([
-        safeFetch(repo.getRaceResults(sessionKey, staticTtl)),
-        safeFetch(repo.getStartingGrid(sessionKey, staticTtl)),
-        repo.getRiders(String(sessionKey), staticTtl),
+        safeFetch(repo.getRaceResults(seasonId, eventId, staticTtl)),
+        safeFetch(repo.getStartingGrid(seasonId, eventId, staticTtl)),
+        repo.getRiders(seasonId, staticTtl),
       ])
       results.value = r
       grid.value = g
@@ -48,7 +48,7 @@ export function useRaceDetail(sessionKey: number, isLive = false) {
 
   async function refreshLiveSlice(): Promise<void> {
     try {
-      const r = await safeFetch(repo.getRaceResults(sessionKey, CACHE_TTL.LIVE))
+      const r = await safeFetch(repo.getRaceResults(seasonId, eventId, CACHE_TTL.LIVE))
       results.value = r
     } catch {
       // silent
