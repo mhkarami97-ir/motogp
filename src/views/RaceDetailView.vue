@@ -9,13 +9,14 @@ import ErrorBoundary from '@/components/ui/ErrorBoundary.vue'
 import PositionChart from '@/components/race/PositionChart.vue'
 
 const route = useRoute()
-const sessionKey = Number(route.params.sessionKey)
+const seasonId = String(route.params.seasonId)
+const eventId = String(route.params.eventId)
 
 const sessionsStore = useSessionsStore()
 const { isLive, currentEvent } = storeToRefs(sessionsStore)
-const isThisSessionLive = computed(() => isLive.value && currentEvent.value?.id === String(sessionKey))
+const isThisSessionLive = computed(() => isLive.value && currentEvent.value?.id === eventId)
 
-const { results, grid, riders, isLoading, error } = useRaceDetail(sessionKey, isThisSessionLive.value)
+const { results, grid, riders, isLoading, error } = useRaceDetail(seasonId, eventId, isThisSessionLive.value)
 
 const sortedResults = computed(() => [...results.value].sort((a, b) => a.position - b.position))
 const sortedGrid = computed(() => [...grid.value].sort((a, b) => a.position - b.position))
