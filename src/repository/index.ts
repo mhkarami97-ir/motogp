@@ -1,2 +1,2 @@
-export type { IF1Repository } from './IF1Repository'
-export { OpenF1Repository } from './OpenF1Repository'
+export type { IMotoGPRepository } from './IMotoGPRepository'
+export { PulseliveRepository } from './PulseliveRepository'

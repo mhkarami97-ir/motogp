@@ -1,44 +1,46 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { OpenF1Repository } from '@/repository'
+import { PulseliveRepository } from '@/repository'
 import { readCache, writeCache, CACHE_TTL } from '@/services/cache'
-import type { Meeting, Session } from '@/types'
+import type { Meeting, Event } from '@/types'
 
-const repo = new OpenF1Repository()
+const repo = new PulseliveRepository()
 const CURRENT_YEAR = new Date().getFullYear()
 const REALTIME_DATA_ENABLED = false
 const CALENDAR_CACHE_KEY = `calendar:${CURRENT_YEAR}`
 
 interface CalendarCachePayload {
   meetings: Meeting[]
-  sessions: Session[]
+  events: Event[]
+  currentSeasonId: string
 }
 
 export const useSessionsStore = defineStore('sessions', () => {
   const meetings = ref<Meeting[]>([])
-  const sessions = ref<Session[]>([])
+  const events = ref<Event[]>([])
+  const currentSeasonId = ref<string>('')
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
   const now = () => new Date()
 
-  const raceSessions = computed(() =>
-    sessions.value.filter((s) => s.session_type === 'Race' && !s.is_cancelled),
+  const raceEvents = computed(() =>
+    events.value.filter((e) => !e.isCancelled && e.status !== 'Cancelled'),
   )
 
-  const latestFinishedRaceSession = computed<Session | null>(() => {
-    const past = raceSessions.value
-      .filter((s) => new Date(s.date_end) < now())
-      .sort((a, b) => new Date(b.date_start).getTime() - new Date(a.date_start).getTime())
+  const latestFinishedRaceEvent = computed<Event | null>(() => {
+    const past = raceEvents.value
+      .filter((e) => new Date(e.dateEnd) < now())
+      .sort((a, b) => new Date(b.dateStart).getTime() - new Date(a.dateStart).getTime())
     return past[0] ?? null
   })
 
-  const currentSession = computed<Session | null>(() => {
+  const currentEvent = computed<Event | null>(() => {
     const t = now()
-    return sessions.value.find((s) => new Date(s.date_start) <= t && t <= new Date(s.date_end)) ?? null
+    return events.value.find((e) => new Date(e.dateStart) <= t && t <= new Date(e.dateEnd)) ?? null
   })
 
-  const isLive = computed(() => REALTIME_DATA_ENABLED && currentSession.value !== null)
+  const isLive = computed(() => REALTIME_DATA_ENABLED && currentEvent.value !== null)
 
   const nextMeeting = computed<Meeting | null>(() => {
     const t = now()
@@ -53,17 +55,6 @@ export const useSessionsStore = defineStore('sessions', () => {
     return meetings.value.filter((m) => new Date(m.date_start) <= t).slice().reverse()
   })
 
-  function sessionKeyForMeeting(meetingKey: number): number | null {
-    return raceSessions.value.find((s) => s.meeting_key === meetingKey)?.session_key ?? null
-  }
-
-  /**
-   * The season calendar only actually goes stale once the next scheduled
-   * race weekend happens, so instead of a flat TTL we cache it until that
-   * race's start time — floored at 1 hour (still catches same-day schedule
-   * tweaks) and capped at 7 days (off-season safety net so a stale
-   * calendar never lingers indefinitely with no upcoming race to key off).
-   */
   async function fetchCalendar(): Promise<void> {
     isLoading.value = true
     error.value = null
@@ -71,16 +62,24 @@ export const useSessionsStore = defineStore('sessions', () => {
       const cached = readCache<CalendarCachePayload>(CALENDAR_CACHE_KEY)
       if (cached) {
         meetings.value = cached.meetings
-        sessions.value = cached.sessions
+        events.value = cached.events
+        currentSeasonId.value = cached.currentSeasonId
         return
       }
 
-      const [fetchedMeetings, fetchedSessions] = await Promise.all([
+      const seasons = await repo.getSeasons(CACHE_TTL.LIVE)
+      const season = seasons.find((s) => s.year === CURRENT_YEAR) ?? seasons[seasons.length - 1]
+      if (!season) throw new Error('No season found')
+
+      currentSeasonId.value = season.id
+
+      const [fetchedEvents, fetchedMeetings] = await Promise.all([
+        repo.getEvents(season.id, CACHE_TTL.LIVE),
         repo.getMeetings(CURRENT_YEAR, CACHE_TTL.LIVE),
-        repo.getSessions(CURRENT_YEAR, CACHE_TTL.LIVE),
       ])
+
+      events.value = fetchedEvents
       meetings.value = fetchedMeetings
-      sessions.value = fetchedSessions
 
       const nowMs = Date.now()
       const upcoming = fetchedMeetings
@@ -90,7 +89,7 @@ export const useSessionsStore = defineStore('sessions', () => {
         ? Math.min(Math.max(new Date(upcoming.date_start).getTime() - nowMs, CACHE_TTL.CALENDAR_MIN), CACHE_TTL.CALENDAR_MAX)
         : CACHE_TTL.CALENDAR_MAX
 
-      writeCache(CALENDAR_CACHE_KEY, { meetings: fetchedMeetings, sessions: fetchedSessions }, ttl)
+      writeCache(CALENDAR_CACHE_KEY, { meetings: fetchedMeetings, events: fetchedEvents, currentSeasonId: season.id }, ttl)
     } catch {
       error.value = 'تقویم مسابقات در دسترس نیست'
     } finally {
@@ -100,16 +99,16 @@ export const useSessionsStore = defineStore('sessions', () => {
 
   return {
     meetings,
-    sessions,
+    events,
+    currentSeasonId,
     isLoading,
     error,
-    raceSessions,
-    latestFinishedRaceSession,
-    currentSession,
+    raceEvents,
+    latestFinishedRaceEvent,
+    currentEvent,
     isLive,
     nextMeeting,
     pastMeetings,
-    sessionKeyForMeeting,
     fetchCalendar,
   }
 })

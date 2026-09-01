@@ -43,7 +43,7 @@ class HttpClient {
 
   private constructor() {
     this.client = axios.create({
-      baseURL: 'https://api.openf1.org/v1',
+      baseURL: 'https://api.pulselive.com/motogp/v1',
       timeout: 20_000,
       headers: {
         Accept: 'application/json',
@@ -72,8 +72,6 @@ class HttpClient {
         const isRetryable = isRateLimited || isServerError
 
         if (!isRetryable || config._retryCount >= MAX_RETRIES) {
-          // Do not use console.error here. The caller can handle the error
-          // without polluting the browser console.
           return Promise.reject(error)
         }
 

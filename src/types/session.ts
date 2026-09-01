@@ -1,104 +1,54 @@
-export type SessionType = 'Race' | 'Qualifying' | 'Sprint' | 'Sprint Qualifying' | 'Practice'
+export type SessionType = 'Race' | 'Qualifying' | 'Sprint' | 'Practice' | 'WarmUp'
 
-export interface Session {
-  session_key: number
-  session_name: string
-  session_type: SessionType
-  date_start: string
-  date_end: string
-  gmt_offset: string
-  location: string
-  country_name: string
-  country_code: string
-  circuit_key: number
-  circuit_short_name: string
-  meeting_key: number
-  year: number
-  is_cancelled: boolean
+export interface Event {
+  id: string
+  name: string
+  shortName?: string
+  dateStart: string
+  dateEnd: string
+  status: 'Finished' | 'Upcoming' | 'InProgress' | 'Cancelled'
+  isCancelled?: boolean
+  circuit?: { name: string; nation?: string }
+  country?: { name: string; iso: string }
+  sessions?: EventSession[]
+}
+
+export interface EventSession {
+  id: string
+  type: SessionType
+  dateStart: string
+  dateEnd: string
+  status: 'Finished' | 'Upcoming' | 'InProgress'
 }
 
 export interface Meeting {
-  meeting_key: number
+  meeting_key: string
   meeting_name: string
   meeting_official_name: string
   location: string
-  country_key: number
-  country_code: string
   country_name: string
-  circuit_key: number
+  country_code: string
   circuit_short_name: string
-  circuit_image?: string
   date_start: string
-  date_end: string
   gmt_offset: string
   year: number
-  is_cancelled: boolean
 }
 
 export interface RaceResult {
-  session_key: number
-  meeting_key: number
-  driver_number: number
   position: number
-  duration: number | number[] | null
-  gap_to_leader: number | string | number[] | null
-  number_of_laps: number
-  dnf: boolean
-  dns: boolean
-  dsq: boolean
+  rider_number: number
+  full_name?: string
+  team_name?: string
+  points?: number
+  time?: string
+  gap?: string
+  status?: string
 }
 
 export interface StartingGridEntry {
-  session_key: number
-  meeting_key: number
-  driver_number: number
   position: number
-  lap_duration: number | null
-}
-
-export interface PitStop {
-  session_key: number
-  meeting_key: number
-  driver_number: number
-  date: string
-  lap_number: number
-  lane_duration: number | null
-  stop_duration: number | null
-}
-
-export interface Stint {
-  session_key: number
-  meeting_key: number
-  driver_number: number
-  stint_number: number
-  lap_start: number
-  lap_end: number
-  compound: 'SOFT' | 'MEDIUM' | 'HARD' | 'INTERMEDIATE' | 'WET' | 'UNKNOWN'
-  tyre_age_at_start: number
-}
-
-export interface WeatherData {
-  session_key: number
-  meeting_key: number
-  date: string
-  air_temperature: number
-  humidity: number
-  pressure: number
-  rainfall: number
-  track_temperature: number
-  wind_direction: number
-  wind_speed: number
-}
-
-export interface RaceControlEvent {
-  session_key: number
-  meeting_key: number
-  date: string
-  driver_number: number | null
-  lap_number: number | null
-  category: string
-  flag: string | null
-  message: string
-  scope: string
-  sector: number | null
+  rider_number: number
+  full_name?: string
+  team_name?: string
+  time?: string
 }

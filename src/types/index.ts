@@ -1,19 +1,15 @@
-export type { Driver } from './driver'
+export type { Rider } from './rider'
 export type {
-  Session,
+  Event,
+  EventSession,
   Meeting,
   RaceResult,
   StartingGridEntry,
-  PitStop,
-  Stint,
-  WeatherData,
-  RaceControlEvent,
   SessionType,
 } from './session'
 export type {
-  DriverChampionshipRaw,
+  RiderChampionshipRaw,
   TeamChampionshipRaw,
-  DriverChampionshipEntry,
+  RiderChampionshipEntry,
   TeamChampionshipEntry,
 } from './standings'
-export type { LapData, Interval, Position } from './live'
