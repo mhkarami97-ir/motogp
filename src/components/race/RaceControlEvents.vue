@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { RaceControlEvent } from '@/types'
+// RaceControlEvent is not in MotoGP Pulselive API — component kept as placeholder
+interface RaceControlEntry { flag: string | null; message: string; lap_number?: number | null }
 
-defineProps<{ events: RaceControlEvent[] }>()
+defineProps<{ events: RaceControlEntry[] }>()
 
 const FLAG_COLOR: Record<string, string> = {
   GREEN: 'bg-green-500',

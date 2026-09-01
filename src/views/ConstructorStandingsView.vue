@@ -2,7 +2,7 @@
 import { useConstructorStandings } from '@/composables'
 import ConstructorTable from '@/components/standings/ConstructorTable.vue'
 
-const { standings, isLoading, error, retry } = useConstructorStandings(true)
+const { standings, isLoading, error, retry } = useConstructorStandings()
 </script>
 
 <template>

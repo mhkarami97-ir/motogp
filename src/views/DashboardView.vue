@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useSessionsStore } from '@/stores'
-import { useDriverStandings, useConstructorStandings } from '@/composables'
+import { useRiderStandings, useConstructorStandings } from '@/composables'
 import HeroSection from '@/components/dashboard/HeroSection.vue'
 import LiveSection from '@/components/dashboard/LiveSection.vue'
 import NextRaceCard from '@/components/dashboard/NextRaceCard.vue'
@@ -10,8 +10,8 @@ import DriverTable from '@/components/standings/DriverTable.vue'
 import ConstructorTable from '@/components/standings/ConstructorTable.vue'
 
 const sessionsStore = useSessionsStore()
-const { isLoading: driversLoading, error: driversError, topFive: topFiveDrivers, retry: retryDrivers } = useDriverStandings(true)
-const { isLoading: teamsLoading, error: teamsError, topFive: topFiveTeams, retry: retryTeams } = useConstructorStandings(true)
+const { isLoading: driversLoading, error: driversError, topFive: topFiveDrivers, retry: retryDrivers } = useRiderStandings()
+const { isLoading: teamsLoading, error: teamsError, topFive: topFiveTeams, retry: retryTeams } = useConstructorStandings()
 
 onMounted(() => void sessionsStore.fetchCalendar())
 </script>
@@ -26,7 +26,7 @@ onMounted(() => void sessionsStore.fetchCalendar())
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-gray-900 dark:text-white font-bold text-lg flex items-center gap-2">
             <span class="w-1 h-5 rounded-full bg-f1-red" />
-            جدول امتیازات رانندگان
+            جدول امتیازات راکبان
           </h2>
           <RouterLink to="/drivers" class="text-f1-red text-sm font-medium hover:underline">مشاهده همه</RouterLink>
         </div>

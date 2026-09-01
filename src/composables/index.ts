@@ -1,6 +1,6 @@
 export { useTheme } from './useTheme'
-export { useDriverStandings } from './useDriverStandings'
+export { useDriverStandings, useRiderStandings } from './useDriverStandings'
 export { useConstructorStandings } from './useConstructorStandings'
 export { useLiveSession } from './useLiveSession'
 export { useRaceDetail } from './useRaceDetail'
-export { getSeasonDriverMap } from './useDriverLookup'
+export { getSeasonRiderMap } from './useDriverLookup'

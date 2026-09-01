@@ -13,7 +13,9 @@ const { isLive, activeSession } = useLiveSession()
       <h2 class="text-gray-900 dark:text-white font-semibold">مسابقه در حال برگزاری</h2>
     </div>
     <p v-if="activeSession" class="relative text-gray-600 dark:text-gray-300 text-sm">
-      {{ activeSession.session_name }} — {{ activeSession.location }}, {{ activeSession.country_name }}
+      {{ activeSession.name }}
+      <template v-if="activeSession.circuit"> — {{ activeSession.circuit.name }}</template>
+      <template v-if="activeSession.country"> ⁠, {{ activeSession.country.name }}</template>
     </p>
     <p class="relative text-gray-400 dark:text-gray-500 text-xs mt-2">داده‌ها هر ۵ ثانیه به‌روز می‌شود</p>
   </div>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import type { PitStop, Driver } from '@/types'
+// PitStop data is not available in the MotoGP Pulselive API — component kept as placeholder
+interface PitStopEntry { rider_number: number; lap_number: number; stop_duration: number | null }
+interface RiderEntry { rider_number: number; full_name: string }
 
-const props = defineProps<{ pitStops: PitStop[]; drivers: Driver[] }>()
+const props = defineProps<{ pitStops: PitStopEntry[]; riders: RiderEntry[] }>()
 
-function driverName(num: number): string {
-  return props.drivers.find((d) => d.driver_number === num)?.full_name ?? String(num)
+function riderName(num: number): string {
+  return props.riders.find((d) => d.rider_number === num)?.full_name ?? String(num)
 }
 
 function formatDuration(dur: number | null): string {
@@ -17,7 +19,7 @@ function formatDuration(dur: number | null): string {
     <table class="w-full">
       <thead class="bg-f1-light-surface-2 dark:bg-f1-surface-2">
         <tr>
-          <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">راننده</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">راکب</th>
           <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">دور</th>
           <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">مدت توقف</th>
         </tr>
@@ -25,10 +27,10 @@ function formatDuration(dur: number | null): string {
       <tbody class="divide-y divide-f1-light-border dark:divide-f1-border">
         <tr
           v-for="pit in pitStops"
-          :key="`${pit.driver_number}-${pit.lap_number}`"
+          :key="`${pit.rider_number}-${pit.lap_number}`"
           class="bg-f1-light-surface dark:bg-f1-surface hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface-2 transition-colors"
         >
-          <td class="px-4 py-3 text-gray-700 dark:text-gray-300 text-sm font-medium">{{ driverName(pit.driver_number) }}</td>
+          <td class="px-4 py-3 text-gray-700 dark:text-gray-300 text-sm font-medium">{{ riderName(pit.rider_number) }}</td>
           <td class="px-4 py-3 text-gray-700 dark:text-gray-300 tabular-nums">{{ pit.lap_number }}</td>
           <td class="px-4 py-3 text-f1-red font-semibold tabular-nums">{{ formatDuration(pit.stop_duration) }}</td>
         </tr>

@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import type { WeatherData } from '@/types'
+// WeatherData is not in MotoGP Pulselive API — component kept as placeholder
+interface WeatherEntry {
+  air_temperature: number
+  track_temperature: number
+  humidity: number
+  wind_speed: number
+}
 
-defineProps<{ weather: WeatherData | null }>()
+defineProps<{ weather: WeatherEntry | null }>()
 </script>
 
 <template>
