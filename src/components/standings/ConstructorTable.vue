@@ -18,18 +18,18 @@ const props = defineProps<{
 }>()
 
 const standingsStore = useStandingsStore()
-const { driverStandings } = storeToRefs(standingsStore)
+const { riderStandings } = storeToRefs(standingsStore)
 
 onMounted(() => {
-  if (props.showDrivers && driverStandings.value.length === 0) {
-    void standingsStore.fetchDriverStandings()
+  if (props.showDrivers && riderStandings.value.length === 0) {
+    void standingsStore.fetchRiderStandings()
   }
 })
 
-function driversForTeam(teamName: string) {
-  return driverStandings.value
+function ridersForTeam(teamName: string) {
+  return riderStandings.value
     .filter((d) => d.team_name === teamName)
-    .sort((a, b) => a.position - b.position)
+    .sort((a: { position: number }, b: { position: number }) => a.position - b.position)
 }
 
 function podiumRing(position: number): string {
@@ -64,19 +64,19 @@ function podiumRing(position: number): string {
         </RouterLink>
 
         <div
-          v-if="showDrivers && driversForTeam(entry.team_name).length > 0"
+          v-if="showDrivers && ridersForTeam(entry.team_name).length > 0"
           class="border-t border-f1-light-border dark:border-f1-border divide-y divide-f1-light-border dark:divide-f1-border"
         >
           <RouterLink
-            v-for="driver in driversForTeam(entry.team_name)"
-            :key="driver.driver_number"
-            :to="`/drivers/${driver.driver_number}`"
+            v-for="rider in ridersForTeam(entry.team_name)"
+            :key="rider.rider_number"
+            :to="`/drivers/${rider.rider_number}`"
             class="flex items-center gap-3 px-4 py-2.5 hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface-2 transition-colors"
           >
             <span class="w-6 flex-shrink-0" />
-            <DriverAvatar :src="driver.headshot_url" :name="driver.full_name" :team-colour="driver.team_colour" size-class="w-7 h-7" text-class="text-[10px]" />
-            <span class="text-gray-700 dark:text-gray-300 text-sm flex-1 min-w-0 truncate">{{ driver.full_name }}</span>
-            <span class="text-gray-400 dark:text-gray-500 text-xs tabular-nums">{{ driver.points }} امتیاز</span>
+            <DriverAvatar :src="rider.headshot_url" :name="rider.full_name" :team-colour="rider.team_colour" size-class="w-7 h-7" text-class="text-[10px]" />
+            <span class="text-gray-700 dark:text-gray-300 text-sm flex-1 min-w-0 truncate">{{ rider.full_name }}</span>
+            <span class="text-gray-400 dark:text-gray-500 text-xs tabular-nums">{{ rider.points }} امتیاز</span>
           </RouterLink>
         </div>
       </div>

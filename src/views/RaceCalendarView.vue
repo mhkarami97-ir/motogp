@@ -18,6 +18,11 @@ function isCompleted(dateStr: string): boolean {
 function formatDate(dateStr: string): string {
   return new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(dateStr))
 }
+
+function meetingEventId(meetingKey: string): string | null {
+  const event = store.events.find((e) => e.id === meetingKey || e.shortName === meetingKey)
+  return event?.id ?? null
+}
 </script>
 
 <template>
@@ -32,8 +37,8 @@ function formatDate(dateStr: string): string {
       <component
         v-for="(meeting, index) in meetings"
         :key="meeting.meeting_key"
-        :is="store.sessionKeyForMeeting(meeting.meeting_key) ? RouterLink : 'div'"
-        :to="store.sessionKeyForMeeting(meeting.meeting_key) ? `/race/${store.sessionKeyForMeeting(meeting.meeting_key)}` : undefined"
+        :is="meetingEventId(meeting.meeting_key) ? RouterLink : 'div'"
+        :to="meetingEventId(meeting.meeting_key) ? `/race/${meetingEventId(meeting.meeting_key)}` : undefined"
         :class="[
           'flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300',
           isCompleted(meeting.date_start)

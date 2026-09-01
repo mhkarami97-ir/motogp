@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import type { DriverChampionshipEntry } from '@/types'
+import type { RiderChampionshipEntry } from '@/types'
 import SkeletonLoader from '@/components/ui/SkeletonLoader.vue'
 import ErrorBoundary from '@/components/ui/ErrorBoundary.vue'
 import DriverAvatar from '@/components/ui/DriverAvatar.vue'
 
 const props = defineProps<{
-  standings: DriverChampionshipEntry[]
+  standings: RiderChampionshipEntry[]
   isLoading: boolean
   error: string | null
   limit?: number
@@ -54,8 +54,8 @@ function podiumRing(position: number): string {
       <div class="md:hidden space-y-3">
         <RouterLink
           v-for="entry in sorted"
-          :key="entry.driver_number"
-          :to="`/drivers/${entry.driver_number}`"
+          :key="entry.rider_number"
+          :to="`/drivers/${entry.rider_number}`"
           :class="['card-hover flex items-center gap-3 p-4', podiumRing(entry.position)]"
         >
           <span class="text-2xl font-bold tabular-nums text-gray-300 dark:text-gray-600 w-8 text-center">{{ entry.position }}</span>
@@ -77,7 +77,7 @@ function podiumRing(position: number): string {
           <thead class="bg-f1-light-surface-2 dark:bg-f1-surface-2">
             <tr>
               <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-f1-red transition-colors" @click="setSort('position')">رتبه</th>
-              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">راننده</th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">راکب</th>
               <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">تیم</th>
               <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-f1-red transition-colors" @click="setSort('points')">امتیاز</th>
               <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-f1-red transition-colors" @click="setSort('wins')">برد</th>
@@ -86,9 +86,9 @@ function podiumRing(position: number): string {
           <tbody class="divide-y divide-f1-light-border dark:divide-f1-border">
             <tr
               v-for="entry in sorted"
-              :key="entry.driver_number"
+              :key="entry.rider_number"
               :class="['bg-f1-light-surface dark:bg-f1-surface hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface-2 transition-colors cursor-pointer', podiumRing(entry.position)]"
-              @click="router.push(`/drivers/${entry.driver_number}`)"
+              @click="router.push(`/drivers/${entry.rider_number}`)"
             >
               <td class="px-4 py-3 text-gray-400 dark:text-gray-500 font-bold tabular-nums text-center">{{ entry.position }}</td>
               <td class="px-4 py-3">

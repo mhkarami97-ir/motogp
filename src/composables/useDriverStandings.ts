@@ -2,24 +2,24 @@ import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStandingsStore } from '@/stores'
 
-export function useDriverStandings(withWins = false) {
+export function useRiderStandings() {
   const store = useStandingsStore()
-  const { driverStandings, isLoadingDrivers, driverError, topFiveDrivers } = storeToRefs(store)
+  const { riderStandings, isLoadingRiders, riderError, topFiveRiders } = storeToRefs(store)
 
   onMounted(async () => {
-    if (driverStandings.value.length === 0) {
-      await store.fetchDriverStandings()
-    }
-    if (withWins) {
-      void store.computeSeasonWins()
+    if (riderStandings.value.length === 0) {
+      await store.fetchRiderStandings()
     }
   })
 
   return {
-    standings: driverStandings,
-    isLoading: isLoadingDrivers,
-    error: driverError,
-    topFive: topFiveDrivers,
-    retry: store.fetchDriverStandings,
+    standings: riderStandings,
+    isLoading: isLoadingRiders,
+    error: riderError,
+    topFive: topFiveRiders,
+    retry: store.fetchRiderStandings,
   }
 }
+
+// backward-compat alias so existing imports of useDriverStandings still work
+export { useRiderStandings as useDriverStandings }
