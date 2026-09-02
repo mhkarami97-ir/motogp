@@ -8,7 +8,7 @@
 
 این پروژه از API رسمی MotoGP (Pulselive) استفاده می‌کند.
 
-- Base URL: `https://api.pulselive.com/motogp/v1`
+- Base URL: `https://api.motogp.pulselive.com/motogp/v1`
 - داده‌های تاریخی فصل‌های گذشته در دسترس هستند
 - endpoint‌های `standing` بر اساس سال کار می‌کنند
 
