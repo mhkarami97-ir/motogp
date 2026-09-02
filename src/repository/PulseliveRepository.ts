@@ -282,21 +282,28 @@ export class PulseliveRepository implements IMotoGPRepository {
         if (!season) return [];
 
         const events = await this.getEvents(season.id, ttlMs);
-        return events.map(
-          (e) =>
-            ({
-              meeting_key: e.id,
-              meeting_name: e.name,
-              meeting_official_name: e.name,
-              location: e.circuit?.name ?? "",
-              country_name: e.country?.name ?? "",
-              country_code: e.country?.iso ?? "",
-              circuit_short_name: e.circuit?.name ?? "",
-              date_start: e.dateStart,
-              gmt_offset: "+00:00",
-              year,
-            }) satisfies Meeting,
-        );
+
+        return events
+          .slice()
+          .sort(
+            (a, b) =>
+              new Date(a.dateStart).getTime() - new Date(b.dateStart).getTime(),
+          )
+          .map(
+            (e) =>
+              ({
+                meeting_key: e.id,
+                meeting_name: e.name,
+                meeting_official_name: e.name,
+                location: e.circuit?.name ?? "",
+                country_name: e.country?.name ?? "",
+                country_code: e.country?.iso ?? "",
+                circuit_short_name: e.circuit?.name ?? "",
+                date_start: e.dateStart,
+                gmt_offset: "+00:00",
+                year,
+              }) satisfies Meeting,
+          );
       },
       ttlMs,
     );

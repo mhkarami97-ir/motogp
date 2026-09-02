@@ -30,8 +30,9 @@ async function load(): Promise<void> {
     const riderMap = await getSeasonRiderMap()
     rider.value = riderMap.get(riderNumber) ?? null
     if (riderStandings.value.length === 0) await standingsStore.fetchRiderStandings()
-  } catch {
+  } catch(e) {
     error.value = 'اطلاعات راکب در دسترس نیست'
+    console.log(e)
   } finally {
     isLoading.value = false
   }
