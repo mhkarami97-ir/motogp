@@ -20,6 +20,7 @@ const RAW_RIDER_PHOTOS: readonly [name: string, slug: string][] = [
   ['Raul Fernandez', 'G8ukTN8w'],
   ['Franco Morbidelli', 'srwszjyQ'],
   ['Francesco Bagnaia', 'IfzOWPi2'],
+  ['Lorenzo Savadori', 'DSC09678'],
 ]
 
 /**
