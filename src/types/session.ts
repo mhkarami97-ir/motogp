@@ -8,6 +8,7 @@ export interface Event {
   dateEnd: string
   status: 'Finished' | 'Upcoming' | 'InProgress' | 'Cancelled'
   isCancelled?: boolean
+  isTest?: boolean
   circuit?: { name: string; nation?: string }
   country?: { name: string; iso: string }
   sessions?: EventSession[]

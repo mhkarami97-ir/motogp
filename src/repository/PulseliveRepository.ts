@@ -53,6 +53,7 @@ interface EventApiRaw {
   name?: string;
   sponsored_name?: string;
   short_name?: string;
+  test?: boolean;
   date_start?: string;
   date_end?: string;
   status?: string;
@@ -102,6 +103,7 @@ function mapEventRaw(raw: EventApiRaw): Event {
     dateEnd,
     status: mapStatus(raw.status, dateStart, dateEnd),
     isCancelled: raw.status === "CANCELLED",
+    isTest: raw.test === true,
     circuit: raw.circuit
       ? { name: raw.circuit.name ?? "", nation: raw.circuit.nation }
       : undefined,

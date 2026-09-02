@@ -21,6 +21,12 @@ const RAW_RIDER_PHOTOS: readonly [name: string, slug: string][] = [
   ['Franco Morbidelli', 'srwszjyQ'],
   ['Francesco Bagnaia', 'IfzOWPi2'],
   ['Lorenzo Savadori', 'DSC09678'],
+  ['Ai Ogura', 'gKJEk1g6'],
+  ['Maverick Viñales', '7QBpFmT4'],
+  ['Iker Lecuona', 'HbxsZIfp'],
+  ['Augusto Fernandez', 'OibgCyiB'],
+  ['Cal Crutchlow', 'Y7CaMXkB'],
+  ['Jonas Folger', 'IQR2Z1ZC'],
 ]
 
 /**

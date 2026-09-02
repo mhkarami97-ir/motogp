@@ -19,9 +19,24 @@ function formatDate(dateStr: string): string {
   return new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(dateStr))
 }
 
+function findEvent(meetingKey: string) {
+  return store.events.find((e) => e.id === meetingKey || e.shortName === meetingKey) ?? null
+}
+
 function meetingEventId(meetingKey: string): string | null {
-  const event = store.events.find((e) => e.id === meetingKey || e.shortName === meetingKey)
-  return event?.id ?? null
+  return findEvent(meetingKey)?.id ?? null
+}
+
+// تست‌های فصل (مثل SEPANG TEST) هیچ سشن مسابقه‌ی رسمی (RAC) ندارند،
+// پس لینک به صفحه‌ی جزئیات مسابقه برایشان همیشه خالی می‌ماند — به‌جای
+// آن، همین‌جا با یک برچسب مجزا نشانشان می‌دهیم و لینک نمی‌کنیم.
+function isTestMeeting(meetingKey: string): boolean {
+  return findEvent(meetingKey)?.isTest === true
+}
+
+function statusLabel(meetingKey: string, dateStr: string): string {
+  if (isTestMeeting(meetingKey)) return 'تست فصل'
+  return isCompleted(dateStr) ? 'برگزار شده' : 'پیش رو'
 }
 </script>
 
@@ -37,13 +52,15 @@ function meetingEventId(meetingKey: string): string | null {
       <component
         v-for="(meeting, index) in meetings"
         :key="meeting.meeting_key"
-        :is="meetingEventId(meeting.meeting_key) ? RouterLink : 'div'"
-        :to="meetingEventId(meeting.meeting_key) ? `/race/${meetingEventId(meeting.meeting_key)}` : undefined"
+        :is="meetingEventId(meeting.meeting_key) && !isTestMeeting(meeting.meeting_key) ? RouterLink : 'div'"
+        :to="meetingEventId(meeting.meeting_key) && !isTestMeeting(meeting.meeting_key) ? `/race/${meetingEventId(meeting.meeting_key)}` : undefined"
         :class="[
           'flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300',
-          isCompleted(meeting.date_start)
-            ? 'bg-MotoGP-light-surface dark:bg-MotoGP-dark border-MotoGP-light-border dark:border-MotoGP-border opacity-60'
-            : 'card-hover border-MotoGP-light-border dark:border-MotoGP-border',
+          isTestMeeting(meeting.meeting_key)
+            ? 'bg-MotoGP-light-surface dark:bg-MotoGP-dark border-MotoGP-light-border dark:border-MotoGP-border opacity-50 cursor-default'
+            : isCompleted(meeting.date_start)
+              ? 'bg-MotoGP-light-surface dark:bg-MotoGP-dark border-MotoGP-light-border dark:border-MotoGP-border opacity-60'
+              : 'card-hover border-MotoGP-light-border dark:border-MotoGP-border',
         ]"
       >
         <span class="text-3xl font-black tabular-nums text-gray-300 dark:text-gray-700 w-8 text-center">{{ index + 1 }}</span>
@@ -53,10 +70,14 @@ function meetingEventId(meetingKey: string): string | null {
             <span
               :class="[
                 'text-xs px-2 py-0.5 rounded-full font-medium',
-                isCompleted(meeting.date_start) ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400' : 'bg-MotoGP-red/15 text-MotoGP-red',
+                isTestMeeting(meeting.meeting_key)
+                  ? 'bg-MotoGP-gold/15 text-MotoGP-gold'
+                  : isCompleted(meeting.date_start)
+                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                    : 'bg-MotoGP-red/15 text-MotoGP-red',
               ]"
             >
-              {{ isCompleted(meeting.date_start) ? 'برگزار شده' : 'پیش رو' }}
+              {{ statusLabel(meeting.meeting_key, meeting.date_start) }}
             </span>
           </div>
           <p class="text-gray-500 dark:text-gray-400 text-sm">{{ meeting.circuit_short_name }} — {{ meeting.country_name }}</p>

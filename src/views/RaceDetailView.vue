@@ -12,13 +12,18 @@ const route = useRoute()
 const eventId = String(route.params.sessionKey)
 
 const sessionsStore = useSessionsStore()
-const { isLive, currentEvent } = storeToRefs(sessionsStore)
+const { isLive, currentEvent, events } = storeToRefs(sessionsStore)
 const isThisEventLive = computed(() => isLive.value && currentEvent.value?.id === eventId)
 
 const { results, grid, isLoading, error } = useRaceDetail(eventId, isThisEventLive.value)
 
 const sortedResults = computed(() => [...results.value].sort((a, b) => a.position - b.position))
 const sortedGrid = computed(() => [...grid.value].sort((a, b) => a.position - b.position))
+
+const currentEventMeta = computed(() => events.value.find((e) => e.id === eventId) ?? null)
+const hasNoRaceData = computed(
+  () => !isLoading.value && !error.value && sortedResults.value.length === 0 && sortedGrid.value.length === 0,
+)
 
 function podiumRing(position: number): string {
   if (position === 1) return 'ring-2 ring-amber-400/50'
@@ -32,6 +37,16 @@ function podiumRing(position: number): string {
   <div class="space-y-8">
     <SkeletonLoader v-if="isLoading" :rows="8" height="h-12" />
     <ErrorBoundary v-else-if="error" :message="error" />
+
+    <ErrorBoundary
+      v-else-if="hasNoRaceData"
+      :message="
+        currentEventMeta?.isTest
+          ? 'این یک تست فصل بود، نه یک مسابقه‌ی رسمی — نتیجه یا گرید شروعی برای آن ثبت نمی‌شود.'
+          : 'نتیجه‌ی این مسابقه هنوز در دسترس نیست.'
+      "
+    />
+
     <template v-else>
       <section v-if="sortedResults.length > 0">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
