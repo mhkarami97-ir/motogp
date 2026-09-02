@@ -12,8 +12,9 @@ import type {
 } from '@/types'
 
 /**
- * Base address confirmed by the community-maintained API docs:
+ * Base address confirmed by two independent community docs:
  * https://github.com/robschmitt/MotoGP-API
+ * https://github.com/micheleberardi/racingmike_motogp_import
  *
  * IMPORTANT: this is a reverse-engineered, unofficial API (not published by
  * Dorna/MotoGP). It exposes two independent sub-systems with DIFFERENT
@@ -21,9 +22,7 @@ import type {
  *  - Broadcast API  -> base path: /            (e.g. /riders, /events, /teams)
  *  - Results API    -> base path: /results     (e.g. /results/seasons, /results/standings)
  *
- * Configure httpClient's baseURL to: https://api.motogp.pulselive.com/motogp/v1
- * Do NOT set baseURL to https://api.pulselive.com/... (missing "motogp." subdomain
- * causes DNS/connection failure, not a CORS error).
+ * httpClient's baseURL MUST be: https://api.motogp.pulselive.com/motogp/v1
  */
 
 interface CategoryRaw {
@@ -41,10 +40,23 @@ interface SeasonRaw {
 
 interface SessionRaw {
   id: string
-  type: string // 'RAC' for race, 'Q1'/'Q2' for qualifying, 'FP1'... for practice
+  type: string // e.g. 'RAC' for race, 'Q1'/'Q2' for qualifying — UNVERIFIED, confirm via DevTools
   date: string
   category: CategoryRaw
   status: string
+}
+
+/** UNVERIFIED raw event shape — confirm exact field names via DevTools before relying on them in production. */
+interface EventApiRaw {
+  id: string
+  name?: string
+  sponsored_name?: string
+  short_name?: string
+  date_start?: string
+  date_end?: string
+  status?: string
+  circuit?: { name?: string; nation?: string }
+  country?: { name?: string; iso?: string }
 }
 
 interface ClassificationResponse {
@@ -53,10 +65,41 @@ interface ClassificationResponse {
   xmlFile?: string | null
 }
 
-interface StandingsResponse {
-  classification: (RiderChampionshipRaw | TeamChampionshipRaw)[]
+interface StandingsResponse<T> {
+  classification: T[]
   file: string | null
   xmlFile?: string | null
+}
+
+interface SeasonSummary {
+  id: string
+  year: number
+  name: string
+}
+
+function mapStatus(status: string | undefined, dateStart: string, dateEnd: string): Event['status'] {
+  if (status === 'CANCELLED') return 'Cancelled'
+  const now = Date.now()
+  if (dateEnd && new Date(dateEnd).getTime() < now) return 'Finished'
+  if (dateStart && new Date(dateStart).getTime() > now) return 'Upcoming'
+  return 'InProgress'
+}
+
+function mapEventRaw(raw: EventApiRaw): Event {
+  const dateStart = raw.date_start ?? ''
+  const dateEnd = raw.date_end ?? dateStart
+
+  return {
+    id: raw.id,
+    name: raw.sponsored_name ?? raw.name ?? raw.short_name ?? '',
+    shortName: raw.short_name,
+    dateStart,
+    dateEnd,
+    status: mapStatus(raw.status, dateStart, dateEnd),
+    isCancelled: raw.status === 'CANCELLED',
+    circuit: raw.circuit ? { name: raw.circuit.name ?? '', nation: raw.circuit.nation } : undefined,
+    country: raw.country ? { name: raw.country.name ?? '', iso: raw.country.iso ?? '' } : undefined,
+  }
 }
 
 /**
@@ -117,14 +160,14 @@ class CategoryResolver {
 export class PulseliveRepository implements IMotoGPRepository {
   private readonly categories = new CategoryResolver()
 
-  public async getSeasons(ttlMs: number = CACHE_TTL.CALENDAR_MAX): Promise<SeasonRaw[]> {
+  public async getSeasons(ttlMs: number = CACHE_TTL.CALENDAR_MAX): Promise<SeasonSummary[]> {
     return withCache('seasons', async () => {
       const { data } = await httpClient.get<SeasonRaw[]>('/results/seasons')
-      return data
+      return data.map((s) => ({ id: s.id, year: s.year, name: s.name ?? `Season ${s.year}` }))
     }, ttlMs)
   }
 
-  private async getSeasonByYear(year: number, ttlMs: number): Promise<SeasonRaw | null> {
+  private async getSeasonByYear(year: number, ttlMs: number): Promise<SeasonSummary | null> {
     const seasons = await this.getSeasons(ttlMs)
     return seasons.find((s) => s.year === year) ?? null
   }
@@ -136,7 +179,7 @@ export class PulseliveRepository implements IMotoGPRepository {
       if (!season) return []
 
       // /riders (Broadcast API) only returns the CURRENT season roster.
-      // For historical seasons, riders must be derived from /teams instead.
+      // Historical seasons must be derived from /teams instead.
       const broadcastCategoryId = await this.categories.resolveForBroadcastApi(season.year, 'MotoGP', ttlMs)
       const { data: teams } = await httpClient.get<{ riders: Rider[] }[]>('/teams', {
         params: { categoryUuid: broadcastCategoryId, seasonYear: season.year },
@@ -147,10 +190,10 @@ export class PulseliveRepository implements IMotoGPRepository {
 
   public async getEvents(seasonId: string, ttlMs: number = CACHE_TTL.CALENDAR_MAX): Promise<Event[]> {
     return withCache(`events:${seasonId}`, async () => {
-      const { data } = await httpClient.get<Event[]>('/results/events', {
+      const { data } = await httpClient.get<EventApiRaw[]>('/results/events', {
         params: { seasonUuid: seasonId },
       })
-      return data
+      return data.map(mapEventRaw)
     }, ttlMs)
   }
 
@@ -160,15 +203,15 @@ export class PulseliveRepository implements IMotoGPRepository {
       if (!season) return []
 
       const events = await this.getEvents(season.id, ttlMs)
-      return events.map((e: any) => ({
+      return events.map((e) => ({
         meeting_key: e.id,
-        meeting_name: e.name ?? e.sponsored_name,
-        meeting_official_name: e.sponsored_name ?? e.name,
+        meeting_name: e.name,
+        meeting_official_name: e.name,
         location: e.circuit?.name ?? '',
         country_name: e.country?.name ?? '',
         country_code: e.country?.iso ?? '',
         circuit_short_name: e.circuit?.name ?? '',
-        date_start: e.date_start,
+        date_start: e.dateStart,
         gmt_offset: '+00:00',
         year,
       } satisfies Meeting))
@@ -178,8 +221,8 @@ export class PulseliveRepository implements IMotoGPRepository {
   public async getEventById(eventId: string, ttlMs: number = CACHE_TTL.CALENDAR_MAX): Promise<Event | null> {
     return withCache(`event:${eventId}`, async () => {
       // Single-event lookup only exists on the Broadcast API, not Results API.
-      const { data } = await httpClient.get<Event>(`/events/${eventId}`)
-      return data
+      const { data } = await httpClient.get<EventApiRaw>(`/events/${eventId}`)
+      return data ? mapEventRaw(data) : null
     }, ttlMs)
   }
 
@@ -224,28 +267,26 @@ export class PulseliveRepository implements IMotoGPRepository {
       if (!season) return []
 
       const categoryId = await this.categories.resolveForResultsApi(season.id, 'MotoGP', CACHE_TTL.CALENDAR_MAX)
-      const { data } = await httpClient.get<StandingsResponse>('/results/standings', {
+      const { data } = await httpClient.get<StandingsResponse<RiderChampionshipRaw>>('/results/standings', {
         params: { seasonUuid: season.id, categoryUuid: categoryId },
       })
-      return data.classification as RiderChampionshipRaw[]
+      return data.classification
     }, CACHE_TTL.HISTORICAL)
   }
 
   public async getTeamChampionship(year: number): Promise<TeamChampionshipRaw[]> {
-    // NOTE: the public docs for this API do not explicitly document a
-    // dedicated "team standings" endpoint. This implementation assumes the
-    // same /results/standings endpoint applies once a "team" categoryUuid is
-    // resolved — VERIFY this against the actual network calls made by
+    // NOTE: no public docs confirm a dedicated team-standings endpoint/shape.
+    // VERIFY this against the actual network calls made by
     // motogp.com/en/gp-results-archive before relying on it in production.
     return withCache(`standing:team:${year}`, async () => {
       const season = await this.getSeasonByYear(year, CACHE_TTL.CALENDAR_MAX)
       if (!season) return []
 
       const categoryId = await this.categories.resolveForResultsApi(season.id, 'MotoGP', CACHE_TTL.CALENDAR_MAX)
-      const { data } = await httpClient.get<StandingsResponse>('/results/standings', {
+      const { data } = await httpClient.get<StandingsResponse<TeamChampionshipRaw>>('/results/standings', {
         params: { seasonUuid: season.id, categoryUuid: categoryId, standing: 'team' },
       })
-      return data.classification as TeamChampionshipRaw[]
+      return data.classification
     }, CACHE_TTL.HISTORICAL)
   }
 }

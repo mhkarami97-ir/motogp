@@ -34,21 +34,49 @@ export interface Meeting {
   year: number
 }
 
-export interface RaceResult {
-  position: number
-  rider_number: number
-  full_name?: string
-  team_name?: string
-  points?: number
-  time?: string
-  gap?: string
-  status?: string
+interface RiderRef {
+  full_name: string
+  number: number
+  country?: { iso: string; name: string }
 }
 
+interface TeamRef {
+  name: string
+  color?: string
+}
+
+interface ConstructorRef {
+  name: string
+}
+
+/**
+ * Confirmed shape of a single entry in the
+ * /results/session/{id}/classification response.
+ * Source: https://github.com/micheleberardi/racingmike_motogp_import
+ */
+export interface RaceResult {
+  id?: string
+  position: number
+  status?: string
+  rider: RiderRef
+  team?: TeamRef
+  constructor?: ConstructorRef
+  best_lap?: { number: number; time: string }
+  total_laps?: number
+  top_speed?: number
+  gap?: { first: string; prev: string }
+}
+
+/**
+ * UNVERIFIED: no public sample of the
+ * /results/event/{id}/category/{id}/grid response was found. Given the
+ * rest of the Results API nests rider/team/constructor consistently, this
+ * is the most likely shape — confirm against a real response before
+ * relying on it in production.
+ */
 export interface StartingGridEntry {
   position: number
-  rider_number: number
-  full_name?: string
-  team_name?: string
+  rider: RiderRef
+  team?: TeamRef
   time?: string
 }

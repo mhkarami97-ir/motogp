@@ -3,19 +3,15 @@ import { computed } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import type { ApexOptions } from 'apexcharts'
 import type { RaceResult } from '@/types'
-import type { Rider } from '@/types'
 
-const props = defineProps<{ results: RaceResult[]; riders: Rider[] }>()
+const props = defineProps<{ results: RaceResult[] }>()
 
 const series = computed(() => [
   {
     name: 'پوزیشن پایانی',
     data: [...props.results]
       .sort((a, b) => a.position - b.position)
-      .map((r) => {
-        const rider = props.riders.find((d) => d.rider_number === r.rider_number)
-        return { x: rider?.name_acronym ?? String(r.rider_number), y: r.position }
-      }),
+      .map((r) => ({ x: r.rider.full_name, y: r.position })),
   },
 ])
 
@@ -25,7 +21,7 @@ const options = computed<ApexOptions>(() => ({
   xaxis: { title: { text: 'پوزیشن' }, reversed: true },
   yaxis: { labels: { style: { fontFamily: 'inherit' } } },
   tooltip: { theme: 'dark' },
-  colors: ['#e10600'],
+  colors: ['#C90909'],
 }))
 </script>
 

@@ -16,14 +16,10 @@ const sessionsStore = useSessionsStore()
 const { isLive, currentEvent } = storeToRefs(sessionsStore)
 const isThisSessionLive = computed(() => isLive.value && currentEvent.value?.id === eventId)
 
-const { results, grid, riders, isLoading, error } = useRaceDetail(seasonId, eventId, isThisSessionLive.value)
+const { results, grid, isLoading, error } = useRaceDetail(seasonId, eventId, isThisSessionLive.value)
 
 const sortedResults = computed(() => [...results.value].sort((a, b) => a.position - b.position))
 const sortedGrid = computed(() => [...grid.value].sort((a, b) => a.position - b.position))
-
-function riderName(num: number): string {
-  return riders.value.find((d) => d.rider_number === num)?.full_name ?? String(num)
-}
 
 function podiumRing(position: number): string {
   if (position === 1) return 'ring-2 ring-amber-400/50'
@@ -46,11 +42,12 @@ function podiumRing(position: number): string {
         <div class="space-y-2">
           <div
             v-for="result in sortedResults"
-            :key="result.rider_number"
+            :key="result.rider.number"
             :class="['card flex items-center gap-4 p-4', podiumRing(result.position)]"
           >
             <span class="text-2xl font-bold tabular-nums text-gray-400 dark:text-gray-500 w-8 text-center">{{ result.position }}</span>
-            <span class="text-gray-900 dark:text-white font-medium">{{ riderName(result.rider_number) }}</span>
+            <span class="text-gray-900 dark:text-white font-medium">{{ result.rider.full_name }}</span>
+            <span v-if="result.team" class="text-gray-400 dark:text-gray-500 text-xs mr-auto">{{ result.team.name }}</span>
           </div>
         </div>
       </section>
@@ -61,14 +58,14 @@ function podiumRing(position: number): string {
           گرید شروع
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div v-for="entry in sortedGrid" :key="entry.rider_number" class="card p-3 text-center">
+          <div v-for="entry in sortedGrid" :key="entry.rider.number" class="card p-3 text-center">
             <p class="text-gray-400 dark:text-gray-500 text-xs mb-1">P{{ entry.position }}</p>
-            <p class="text-gray-900 dark:text-white text-sm font-medium">{{ riderName(entry.rider_number) }}</p>
+            <p class="text-gray-900 dark:text-white text-sm font-medium">{{ entry.rider.full_name }}</p>
           </div>
         </div>
       </section>
 
-      <PositionChart :results="results" :riders="riders" />
+      <PositionChart :results="results" />
     </template>
   </div>
 </template>

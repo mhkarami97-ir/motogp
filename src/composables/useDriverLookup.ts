@@ -3,18 +3,16 @@ import { useSessionsStore } from '@/stores'
 import type { Rider } from '@/types'
 
 const repo = new PulseliveRepository()
-const MAX_RACES_FOR_RIDER_LOOKUP = 5
 
 let cachedMap: Map<number, Rider> | null = null
 let cachedPromise: Promise<Map<number, Rider>> | null = null
 
 /**
- * Some riders (reserve/substitute appearances, single-race absences)
- * don't show up in the very latest race's /riders roster even though they
- * still have a standings entry. Merging rider info across the last few
- * finished races (most recent appearance wins on conflict) makes
- * headshots/names/profile lookups resolve correctly for those riders
- * instead of showing blank fields or "rider not found".
+ * The MotoGP API only exposes a rider roster at SEASON level
+ * (Broadcast API's /riders is current-season-only; historical seasons
+ * come from /teams keyed by seasonYear). There is no per-event/session
+ * roster endpoint, so this simply fetches the current season's riders
+ * once and caches the result in-memory for the lifetime of the app.
  */
 export async function getSeasonRiderMap(forceRefresh = false): Promise<Map<number, Rider>> {
   if (cachedMap && !forceRefresh) return cachedMap
@@ -23,19 +21,15 @@ export async function getSeasonRiderMap(forceRefresh = false): Promise<Map<numbe
   const sessionsStore = useSessionsStore()
   if (sessionsStore.events.length === 0) await sessionsStore.fetchCalendar()
 
-  const finishedRaces = sessionsStore.raceEvents
-    .filter((e) => new Date(e.dateEnd) < new Date())
-    .sort((a, b) => new Date(a.dateStart).getTime() - new Date(b.dateStart).getTime())
-    .slice(-MAX_RACES_FOR_RIDER_LOOKUP)
-
   cachedPromise = (async () => {
+    const seasonId = sessionsStore.currentSeasonId
+    const riders = seasonId ? await repo.getRiders(seasonId) : []
+
     const map = new Map<number, Rider>()
-    for (const event of finishedRaces) {
-      const eventRiders = await repo.getRiders(event.id)
-      for (const rider of eventRiders) {
-        map.set(rider.rider_number, rider)
-      }
+    for (const rider of riders) {
+      map.set(rider.rider_number, rider)
     }
+
     cachedMap = map
     return map
   })()
