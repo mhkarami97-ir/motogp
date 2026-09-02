@@ -13,8 +13,6 @@ const riderNumber = Number(route.params.number)
 const standingsStore = useStandingsStore()
 const { riderStandings, isLoadingRiders, riderError } = storeToRefs(standingsStore)
 
-// از داده‌ی جدول امتیازات (که تأیید شده کار می‌کند) استفاده می‌کنیم،
-// نه از یک Endpoint جداگانه‌ی تأییدنشده (/teams) که قبلاً کرش می‌داد.
 const standing = computed(() => riderStandings.value.find((d) => d.rider_number === riderNumber) ?? null)
 
 async function load(): Promise<void> {
