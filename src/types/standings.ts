@@ -16,10 +16,6 @@ interface ConstructorRef {
   name: string
 }
 
-/**
- * Confirmed shape of a single entry in the /results/standings response.
- * Source: https://github.com/micheleberardi/racingmike_motogp_import
- */
 export interface RiderChampionshipRaw {
   position: number
   points: number
@@ -29,11 +25,6 @@ export interface RiderChampionshipRaw {
   constructor?: ConstructorRef
 }
 
-/**
- * UNVERIFIED: no public sample of a dedicated team/constructor standings
- * payload was found in any source checked. Confirm this shape against the
- * real network response before trusting it.
- */
 export interface TeamChampionshipRaw {
   position: number
   points: number
@@ -71,6 +62,12 @@ function buildAcronym(fullName: string): string {
     .slice(0, 3)
 }
 
+function normalizeColor(rawColor: string | undefined, teamName: string): string {
+  const cleaned = rawColor?.replace(/^#/, '').trim()
+  const isValidHex = cleaned && /^[0-9a-fA-F]{6}$/.test(cleaned)
+  return isValidHex ? cleaned : resolveTeamColor(teamName)
+}
+
 export function mapRiderChampionshipRaw(raw: RiderChampionshipRaw): RiderChampionshipEntry {
   const teamName = raw.team?.name ?? ''
   return {
@@ -80,7 +77,7 @@ export function mapRiderChampionshipRaw(raw: RiderChampionshipRaw): RiderChampio
     full_name: raw.rider.full_name,
     name_acronym: buildAcronym(raw.rider.full_name),
     team_name: teamName,
-    team_colour: resolveTeamColor(teamName),
+    team_colour: normalizeColor(raw.team?.color, teamName),
     headshot_url: resolveRiderPhotoUrl(raw.rider.full_name),
     points: raw.points,
     wins: null,
@@ -91,7 +88,7 @@ export function mapTeamChampionshipRaw(raw: TeamChampionshipRaw): TeamChampionsh
   return {
     position: raw.position,
     team_name: raw.team.name,
-    team_colour: resolveTeamColor(raw.team.name),
+    team_colour: normalizeColor(raw.team.color, raw.team.name),
     points: raw.points,
     wins: null,
   }
