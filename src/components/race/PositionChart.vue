@@ -32,7 +32,7 @@ const options = computed<ApexOptions>(() => ({
 <template>
   <section v-if="results.length > 0">
     <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-      <span class="w-1 h-5 rounded-full bg-f1-red" />
+      <span class="w-1 h-5 rounded-full bg-MotoGP-red" />
       نمودار پوزیشن
     </h2>
     <div class="card p-4">

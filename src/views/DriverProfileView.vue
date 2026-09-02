@@ -46,7 +46,7 @@ onMounted(load)
     <ErrorBoundary v-else-if="error || !rider" :message="error ?? 'راکب پیدا نشد'" :on-retry="load" />
     <div v-else class="space-y-6">
       <div
-        class="stripe-top relative overflow-hidden rounded-2xl border border-f1-light-border dark:border-f1-border p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start"
+        class="stripe-top relative overflow-hidden rounded-2xl border border-MotoGP-light-border dark:border-MotoGP-border p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start"
         :style="{ background: `linear-gradient(135deg, #${rider.team_colour}14, transparent)` }"
       >
         <div class="absolute top-0 left-0 w-56 h-56 rounded-full blur-3xl opacity-20" :style="{ backgroundColor: `#${rider.team_colour}` }" />

@@ -74,20 +74,20 @@ function podiumRing(position: number): string {
 
       <div class="hidden md:block card overflow-hidden">
         <table class="w-full">
-          <thead class="bg-f1-light-surface-2 dark:bg-f1-surface-2">
+          <thead class="bg-MotoGP-light-surface-2 dark:bg-MotoGP-surface-2">
             <tr>
-              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-f1-red transition-colors" @click="setSort('position')">رتبه</th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-MotoGP-red transition-colors" @click="setSort('position')">رتبه</th>
               <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">راکب</th>
               <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">تیم</th>
-              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-f1-red transition-colors" @click="setSort('points')">امتیاز</th>
-              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-f1-red transition-colors" @click="setSort('wins')">برد</th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-MotoGP-red transition-colors" @click="setSort('points')">امتیاز</th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:text-MotoGP-red transition-colors" @click="setSort('wins')">برد</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-f1-light-border dark:divide-f1-border">
+          <tbody class="divide-y divide-MotoGP-light-border dark:divide-MotoGP-border">
             <tr
               v-for="entry in sorted"
               :key="entry.rider_number"
-              :class="['bg-f1-light-surface dark:bg-f1-surface hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface-2 transition-colors cursor-pointer', podiumRing(entry.position)]"
+              :class="['bg-MotoGP-light-surface dark:bg-MotoGP-surface hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface-2 transition-colors cursor-pointer', podiumRing(entry.position)]"
               @click="router.push(`/drivers/${entry.rider_number}`)"
             >
               <td class="px-4 py-3 text-gray-400 dark:text-gray-500 font-bold tabular-nums text-center">{{ entry.position }}</td>

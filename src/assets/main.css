@@ -3,20 +3,20 @@
 @import "@fontsource-variable/vazirmatn/index.css";
 
 @theme {
-  --color-f1-red: #E10600;
-  --color-f1-red-dark: #A30500;
-  --color-f1-red-light: #FF3B30;
-  --color-f1-gold: #D4AF37;
+  --color-MotoGP-red: #E10600;
+  --color-MotoGP-red-dark: #A30500;
+  --color-MotoGP-red-light: #FF3B30;
+  --color-MotoGP-gold: #D4AF37;
 
-  --color-f1-dark: #0B0B12;
-  --color-f1-surface: #16161F;
-  --color-f1-surface-2: #1D1D29;
-  --color-f1-border: #2A2A38;
+  --color-MotoGP-dark: #0B0B12;
+  --color-MotoGP-surface: #16161F;
+  --color-MotoGP-surface-2: #1D1D29;
+  --color-MotoGP-border: #2A2A38;
 
-  --color-f1-light: #F5F6FA;
-  --color-f1-light-surface: #FFFFFF;
-  --color-f1-light-surface-2: #EFEFF5;
-  --color-f1-light-border: #E4E5EE;
+  --color-MotoGP-light: #F5F6FA;
+  --color-MotoGP-light-surface: #FFFFFF;
+  --color-MotoGP-light-surface-2: #EFEFF5;
+  --color-MotoGP-light-border: #E4E5EE;
 
   --font-sans: 'Vazirmatn Variable', sans-serif;
 }
@@ -33,15 +33,15 @@
   }
 
   body {
-    @apply antialiased bg-f1-light text-gray-900 dark:bg-f1-dark dark:text-gray-100 transition-colors duration-300;
+    @apply antialiased bg-MotoGP-light text-gray-900 dark:bg-MotoGP-dark dark:text-gray-100 transition-colors duration-300;
   }
 
   ::selection {
-    @apply bg-f1-red/30;
+    @apply bg-MotoGP-red/30;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-f1-red);
+    outline: 2px solid var(--color-MotoGP-red);
     outline-offset: 2px;
   }
 
@@ -50,15 +50,15 @@
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-f1-light-surface-2 dark:bg-f1-surface;
+    @apply bg-MotoGP-light-surface-2 dark:bg-MotoGP-surface;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-f1-red/60 rounded-full;
+    @apply bg-MotoGP-red/60 rounded-full;
     border: 2px solid transparent;
     background-clip: content-box;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-f1-red;
+    @apply bg-MotoGP-red;
   }
 }
 
@@ -71,11 +71,11 @@
  * "Cannot apply unknown utility class `card`" build error.
  */
 @utility card {
-  @apply rounded-2xl bg-f1-light-surface dark:bg-f1-surface border border-f1-light-border dark:border-f1-border transition-colors duration-300;
+  @apply rounded-2xl bg-MotoGP-light-surface dark:bg-MotoGP-surface border border-MotoGP-light-border dark:border-MotoGP-border transition-colors duration-300;
 }
 
 @utility card-hover {
-  @apply card hover:border-f1-red/50 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-f1-red/5 transition-all duration-300;
+  @apply card hover:border-MotoGP-red/50 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-MotoGP-red/5 transition-all duration-300;
 }
 
 @utility stripe-top {
@@ -87,21 +87,21 @@
     inset-inline: 0;
     top: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--color-f1-red) 0%, var(--color-f1-red-light) 50%, var(--color-f1-red) 100%);
+    background: linear-gradient(90deg, var(--color-MotoGP-red) 0%, var(--color-MotoGP-red-light) 50%, var(--color-MotoGP-red) 100%);
   }
 }
 
 @utility checkered-corner {
-  background-image: conic-gradient(var(--color-f1-light-border) 90deg, transparent 90deg 180deg, var(--color-f1-light-border) 180deg 270deg, transparent 270deg);
+  background-image: conic-gradient(var(--color-MotoGP-light-border) 90deg, transparent 90deg 180deg, var(--color-MotoGP-light-border) 180deg 270deg, transparent 270deg);
   background-size: 16px 16px;
 
   .dark & {
-    background-image: conic-gradient(var(--color-f1-border) 90deg, transparent 90deg 180deg, var(--color-f1-border) 180deg 270deg, transparent 270deg);
+    background-image: conic-gradient(var(--color-MotoGP-border) 90deg, transparent 90deg 180deg, var(--color-MotoGP-border) 180deg 270deg, transparent 270deg);
   }
 }
 
 @utility text-gradient-red {
-  background: linear-gradient(90deg, var(--color-f1-red), var(--color-f1-red-light));
+  background: linear-gradient(90deg, var(--color-MotoGP-red), var(--color-MotoGP-red-light));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

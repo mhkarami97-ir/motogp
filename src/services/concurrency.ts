@@ -1,6 +1,6 @@
 /**
  * Runs `mapper` over `items` with at most `limit` requests in flight at
- * once. Used to avoid firing dozens of parallel OpenF1 requests (which
+ * once. Used to avoid firing dozens of parallel OpenMotoGP requests (which
  * triggers HTTP 429) when aggregating data across many race sessions.
  */
 export async function mapWithConcurrency<T, R>(

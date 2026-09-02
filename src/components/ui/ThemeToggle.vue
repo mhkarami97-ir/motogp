@@ -6,7 +6,7 @@ const { isDark, toggle } = useTheme()
 
 <template>
   <button
-    class="relative p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface hover:text-f1-red transition-colors duration-300"
+    class="relative p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface hover:text-MotoGP-red transition-colors duration-300"
     :aria-label="isDark ? 'تغییر به حالت روشن' : 'تغییر به حالت تاریک'"
     @click="toggle"
   >

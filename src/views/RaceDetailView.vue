@@ -40,7 +40,7 @@ function podiumRing(position: number): string {
     <template v-else>
       <section v-if="sortedResults.length > 0">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-          <span class="w-1 h-5 rounded-full bg-f1-red" />
+          <span class="w-1 h-5 rounded-full bg-MotoGP-red" />
           نتایج مسابقه
         </h2>
         <div class="space-y-2">
@@ -57,7 +57,7 @@ function podiumRing(position: number): string {
 
       <section v-if="sortedGrid.length > 0">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-          <span class="w-1 h-5 rounded-full bg-f1-red" />
+          <span class="w-1 h-5 rounded-full bg-MotoGP-red" />
           گرید شروع
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">

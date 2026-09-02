@@ -6,7 +6,7 @@ export default {
     calendar: 'تقویم',
   },
   dashboard: {
-    season: 'فصل فرمول یک',
+    season: 'فصل موتو جی‌پی',
     nextRace: 'مسابقه بعدی',
     driverStandings: 'جدول امتیازات رانندگان',
     teamStandings: 'جدول امتیازات تیم\u200cها',

@@ -52,7 +52,7 @@ function podiumRing(position: number): string {
       >
         <RouterLink
           :to="`/teams/${encodeURIComponent(entry.team_name)}`"
-          class="flex items-center gap-4 p-4 hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface-2 transition-colors"
+          class="flex items-center gap-4 p-4 hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface-2 transition-colors"
         >
           <span class="text-xl font-bold tabular-nums text-gray-300 dark:text-gray-600 w-6 text-center">{{ entry.position }}</span>
           <div class="w-3 h-10 rounded-sm" :style="{ backgroundColor: `#${entry.team_colour}` }" />
@@ -65,13 +65,13 @@ function podiumRing(position: number): string {
 
         <div
           v-if="showDrivers && ridersForTeam(entry.team_name).length > 0"
-          class="border-t border-f1-light-border dark:border-f1-border divide-y divide-f1-light-border dark:divide-f1-border"
+          class="border-t border-MotoGP-light-border dark:border-MotoGP-border divide-y divide-MotoGP-light-border dark:divide-MotoGP-border"
         >
           <RouterLink
             v-for="rider in ridersForTeam(entry.team_name)"
             :key="rider.rider_number"
             :to="`/drivers/${rider.rider_number}`"
-            class="flex items-center gap-3 px-4 py-2.5 hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface-2 transition-colors"
+            class="flex items-center gap-3 px-4 py-2.5 hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface-2 transition-colors"
           >
             <span class="w-6 flex-shrink-0" />
             <DriverAvatar :src="rider.headshot_url" :name="rider.full_name" :team-colour="rider.team_colour" size-class="w-7 h-7" text-class="text-[10px]" />

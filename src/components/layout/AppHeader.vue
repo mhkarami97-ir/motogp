@@ -17,13 +17,13 @@ const navItems = [
 </script>
 
 <template>
-  <header class="stripe-top sticky top-0 z-50 border-b border-f1-light-border dark:border-f1-border bg-f1-light-surface/90 dark:bg-f1-dark/90 backdrop-blur-md transition-colors duration-300">
+  <header class="stripe-top sticky top-0 z-50 border-b border-MotoGP-light-border dark:border-MotoGP-border bg-MotoGP-light-surface/90 dark:bg-MotoGP-dark/90 backdrop-blur-md transition-colors duration-300">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="flex items-center justify-between h-16">
         <RouterLink to="/" class="flex items-center gap-2 group">
-          <span class="relative text-f1-red font-black text-2xl tracking-tight">
-            F1
-            <span class="absolute -bottom-1 right-0 left-0 h-0.5 bg-f1-red scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
+          <span class="relative text-MotoGP-red font-black text-2xl tracking-tight">
+            MotoGP
+            <span class="absolute -bottom-1 right-0 left-0 h-0.5 bg-MotoGP-red scale-x-0 group-hover:scale-x-100 transition-transform origin-right" />
           </span>
           <span class="text-sm font-medium text-gray-500 dark:text-gray-400">ایران</span>
         </RouterLink>
@@ -34,19 +34,19 @@ const navItems = [
             :key="item.to"
             :to="item.to"
             :class="[
-              'relative py-1 text-sm font-medium transition-colors hover:text-f1-red',
-              route.path === item.to ? 'text-f1-red' : 'text-gray-600 dark:text-gray-300',
+              'relative py-1 text-sm font-medium transition-colors hover:text-MotoGP-red',
+              route.path === item.to ? 'text-MotoGP-red' : 'text-gray-600 dark:text-gray-300',
             ]"
           >
             {{ item.name }}
-            <span v-if="route.path === item.to" class="absolute -bottom-1 right-0 left-0 h-0.5 rounded-full bg-f1-red" />
+            <span v-if="route.path === item.to" class="absolute -bottom-1 right-0 left-0 h-0.5 rounded-full bg-MotoGP-red" />
           </RouterLink>
         </nav>
 
         <div class="flex items-center gap-3">
           <ThemeToggle />
           <button
-            class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface transition-colors"
+            class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface transition-colors"
             aria-label="منو"
             @click="mobileMenuOpen = !mobileMenuOpen"
           >
@@ -58,14 +58,14 @@ const navItems = [
         </div>
       </div>
 
-      <div v-if="mobileMenuOpen" class="md:hidden py-4 border-t border-f1-light-border dark:border-f1-border space-y-1">
+      <div v-if="mobileMenuOpen" class="md:hidden py-4 border-t border-MotoGP-light-border dark:border-MotoGP-border space-y-1">
         <RouterLink
           v-for="item in navItems"
           :key="item.to"
           :to="item.to"
           :class="[
             'block py-2 px-2 rounded-lg text-sm font-medium transition-colors',
-            route.path === item.to ? 'text-f1-red bg-f1-red/5' : 'hover:text-f1-red hover:bg-f1-light-surface-2 dark:hover:bg-f1-surface',
+            route.path === item.to ? 'text-MotoGP-red bg-MotoGP-red/5' : 'hover:text-MotoGP-red hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface',
           ]"
           @click="mobileMenuOpen = false"
         >

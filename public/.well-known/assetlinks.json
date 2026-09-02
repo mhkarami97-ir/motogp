@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "mhk.f1",
+      "package_name": "mhk.MotoGP",
       "sha256_cert_fingerprints": [
-        "CB:8D:62:C1:1C:6B:25:56:B7:71:9D:F9:8E:FC:F3:65:CC:4D:21:65:4C:F9:BE:5A:20:01:3C:0B:8B:C3:15:19"
+        ""
       ]
     }
   },
@@ -13,9 +13,9 @@
     "relation": ["check_validation"],
     "target": {
       "namespace": "cafebazaar_twa",
-      "package_name": "mhk.f1",
+      "package_name": "mhk.MotoGP",
       "sha256_cert_fingerprints": [
-        "CB:8D:62:C1:1C:6B:25:56:B7:71:9D:F9:8E:FC:F3:65:CC:4D:21:65:4C:F9:BE:5A:20:01:3C:0B:8B:C3:15:19"
+        ""
       ]
     }
   }

@@ -23,7 +23,7 @@ function flagColor(flag: string | null): string {
     <div
       v-for="(event, i) in events"
       :key="i"
-      class="card flex items-start gap-3 p-3 hover:border-f1-red/30 transition-colors duration-200"
+      class="card flex items-start gap-3 p-3 hover:border-MotoGP-red/30 transition-colors duration-200"
     >
       <span :class="['w-2 h-2 rounded-full mt-1.5 flex-shrink-0', flagColor(event.flag)]" />
       <div class="flex-1 min-w-0">

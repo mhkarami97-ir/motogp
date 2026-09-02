@@ -44,7 +44,7 @@ function riderPath(riderNumber: number): string {
 
     <template v-else>
       <section
-        class="stripe-top relative overflow-hidden rounded-2xl border border-f1-light-border dark:border-f1-border p-6 md:p-8"
+        class="stripe-top relative overflow-hidden rounded-2xl border border-MotoGP-light-border dark:border-MotoGP-border p-6 md:p-8"
         :style="{ background: `linear-gradient(135deg, #${team.team_colour}20, transparent 65%)` }"
       >
         <div
@@ -57,7 +57,7 @@ function riderPath(riderNumber: number): string {
             :style="{ backgroundColor: `#${team.team_colour}`, boxShadow: `0 0 28px #${team.team_colour}80` }"
           />
           <div class="min-w-0">
-            <p class="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-f1-red">سازنده موتوجی‌پی</p>
+            <p class="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-MotoGP-red">سازنده موتوجی‌پی</p>
             <h1 class="truncate text-3xl font-black text-gray-900 dark:text-white md:text-4xl">{{ team.team_name }}</h1>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">راکبان و آمار فصل جاری</p>
           </div>

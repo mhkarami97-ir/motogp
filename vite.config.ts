@@ -20,9 +20,9 @@ export default defineConfig({
         "icon512.png",
       ],
       manifest: {
-        name: "F1 | داشبورد فرمول یک",
-        short_name: "F1 ایران",
-        description: "داشبورد اطلاعات فرمول یک به زبان فارسی",
+        name: "MotoGP | داشبورد موتو جی‌پی",
+        short_name: "MotoGP ایران",
+        description: "داشبورد اطلاعات موتو جی‌پی به زبان فارسی",
         start_url: "/",
         scope: "/",
         id: "/",
@@ -82,10 +82,10 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.openf1\.org\/.*/,
+            urlPattern: /^https:\/\/api\.pulselive\.com\/.*/,
             handler: "StaleWhileRevalidate",
             options: {
-              cacheName: "openf1-runtime",
+              cacheName: "openMotoGP-runtime",
               expiration: {
                 maxEntries: 200,
                 maxAgeSeconds: 60 * 60 * 24 * 30,

@@ -28,7 +28,7 @@ function meetingEventId(meetingKey: string): string | null {
 <template>
   <div>
     <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-      <span class="w-1.5 h-7 rounded-full bg-f1-red" />
+      <span class="w-1.5 h-7 rounded-full bg-MotoGP-red" />
       تقویم مسابقات {{ new Date().getFullYear() }}
     </h1>
     <SkeletonLoader v-if="isLoading" :rows="10" height="h-20" />
@@ -42,8 +42,8 @@ function meetingEventId(meetingKey: string): string | null {
         :class="[
           'flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300',
           isCompleted(meeting.date_start)
-            ? 'bg-f1-light-surface dark:bg-f1-dark border-f1-light-border dark:border-f1-border opacity-60'
-            : 'card-hover border-f1-light-border dark:border-f1-border',
+            ? 'bg-MotoGP-light-surface dark:bg-MotoGP-dark border-MotoGP-light-border dark:border-MotoGP-border opacity-60'
+            : 'card-hover border-MotoGP-light-border dark:border-MotoGP-border',
         ]"
       >
         <span class="text-3xl font-black tabular-nums text-gray-300 dark:text-gray-700 w-8 text-center">{{ index + 1 }}</span>
@@ -53,7 +53,7 @@ function meetingEventId(meetingKey: string): string | null {
             <span
               :class="[
                 'text-xs px-2 py-0.5 rounded-full font-medium',
-                isCompleted(meeting.date_start) ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400' : 'bg-f1-red/15 text-f1-red',
+                isCompleted(meeting.date_start) ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400' : 'bg-MotoGP-red/15 text-MotoGP-red',
               ]"
             >
               {{ isCompleted(meeting.date_start) ? 'برگزار شده' : 'پیش رو' }}

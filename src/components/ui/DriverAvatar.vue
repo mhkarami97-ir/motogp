@@ -29,7 +29,7 @@ const initials = computed(() => {
     v-if="!showFallback"
     :src="src as string"
     :alt="name"
-    :class="['object-cover flex-shrink-0 border border-f1-light-border dark:border-f1-border', sizeClass ?? 'w-8 h-8', roundClass ?? 'rounded-full']"
+    :class="['object-cover flex-shrink-0 border border-MotoGP-light-border dark:border-MotoGP-border', sizeClass ?? 'w-8 h-8', roundClass ?? 'rounded-full']"
     loading="lazy"
     @error="failed = true"
   />

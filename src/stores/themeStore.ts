@@ -22,7 +22,7 @@ export const useThemeStore = defineStore(
   },
   {
     persist: {
-      key: 'f1-theme',
+      key: 'MotoGP-theme',
       storage: localStorage,
       pick: ['isDark'],
     },

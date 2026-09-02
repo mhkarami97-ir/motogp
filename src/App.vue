@@ -9,7 +9,7 @@ import UpdatePrompt from '@/components/UpdatePrompt.vue'
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-f1-light dark:bg-f1-dark transition-colors duration-300">
+  <div class="min-h-screen flex flex-col bg-MotoGP-light dark:bg-MotoGP-dark transition-colors duration-300">
     <AppHeader />
     <main class="flex-1 container mx-auto px-4 py-6 max-w-7xl">
       <RouterView />
