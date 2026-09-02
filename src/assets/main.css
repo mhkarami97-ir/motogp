@@ -3,20 +3,20 @@
 @import "@fontsource-variable/vazirmatn/index.css";
 
 @theme {
-  --color-MotoGP-red: #E10600;
-  --color-MotoGP-red-dark: #A30500;
-  --color-MotoGP-red-light: #FF3B30;
-  --color-MotoGP-gold: #D4AF37;
+  --color-MotoGP-red: #C90909;        /* Milano Red - رنگ اصلی برند MotoGP */
+  --color-MotoGP-red-dark: #8A0606;   /* حالت hover/active تیره‌تر */
+  --color-MotoGP-red-light: #E4002B;  /* قرمز روشن‌تر و پرکنتراست‌تر تایپوگرافی لوگو */
+  --color-MotoGP-gold: #F4A300;       /* لهجه‌ی طلایی/نارنجی به‌عنوان رنگ ثانویه‌ی هشدار/برجسته‌سازی */
 
-  --color-MotoGP-dark: #0B0B12;
-  --color-MotoGP-surface: #16161F;
-  --color-MotoGP-surface-2: #1D1D29;
-  --color-MotoGP-border: #2A2A38;
+  --color-MotoGP-dark: #0B0B0F;
+  --color-MotoGP-surface: #17171C;
+  --color-MotoGP-surface-2: #1E1E24;
+  --color-MotoGP-border: #2C2C33;
 
-  --color-MotoGP-light: #F5F6FA;
+  --color-MotoGP-light: #F6F6F7;
   --color-MotoGP-light-surface: #FFFFFF;
-  --color-MotoGP-light-surface-2: #EFEFF5;
-  --color-MotoGP-light-border: #E4E5EE;
+  --color-MotoGP-light-surface-2: #EFEFF1;
+  --color-MotoGP-light-border: #E3E3E6;
 
   --font-sans: 'Vazirmatn Variable', sans-serif;
 }
@@ -108,7 +108,7 @@
 }
 
 @utility glow-red {
-  box-shadow: 0 0 0 1px rgba(225, 6, 0, 0.15), 0 8px 24px -8px rgba(225, 6, 0, 0.35);
+  box-shadow: 0 0 0 1px rgba(201, 9, 9, 0.15), 0 8px 24px -8px rgba(201, 9, 9, 0.35);
 }
 
 .tabular-nums {
