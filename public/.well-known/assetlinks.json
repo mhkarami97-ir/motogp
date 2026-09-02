@@ -5,7 +5,7 @@
       "namespace": "android_app",
       "package_name": "mhk.MotoGP",
       "sha256_cert_fingerprints": [
-        ""
+        "A7:8D:71:3F:88:39:EA:81:DC:AD:25:DB:D5:06:26:BF:81:7A:DC:A6:E6:9D:62:9C:AB:3D:BA:A6:87:6E:FC:B7"
       ]
     }
   },
@@ -15,7 +15,7 @@
       "namespace": "cafebazaar_twa",
       "package_name": "mhk.MotoGP",
       "sha256_cert_fingerprints": [
-        ""
+        "A7:8D:71:3F:88:39:EA:81:DC:AD:25:DB:D5:06:26:BF:81:7A:DC:A6:E6:9D:62:9C:AB:3D:BA:A6:87:6E:FC:B7"
       ]
     }
   }

@@ -1,3 +1,5 @@
+import { resolveRiderPhotoUrl } from '@/data/riderPhotos'
+
 interface RiderRef {
   full_name: string
   number: number
@@ -13,6 +15,10 @@ interface ConstructorRef {
   name: string
 }
 
+/**
+ * Confirmed shape of a single entry in the /results/standings response.
+ * Source: https://github.com/micheleberardi/racingmike_motogp_import
+ */
 export interface RiderChampionshipRaw {
   position: number
   points: number
@@ -25,8 +31,7 @@ export interface RiderChampionshipRaw {
 /**
  * UNVERIFIED: no public sample of a dedicated team/constructor standings
  * payload was found in any source checked. Confirm this shape against the
- * real network response (motogp.com/en/gp-results-archive -> constructor
- * standings) before trusting it.
+ * real network response before trusting it.
  */
 export interface TeamChampionshipRaw {
   position: number
@@ -65,10 +70,6 @@ function buildAcronym(fullName: string): string {
     .slice(0, 3)
 }
 
-/**
- * Raw -> UI entry mapper for rider standings. Centralized here so
- * standingsStore.ts never has to know about the API's nested shape.
- */
 export function mapRiderChampionshipRaw(raw: RiderChampionshipRaw): RiderChampionshipEntry {
   return {
     position: raw.position,
@@ -77,10 +78,8 @@ export function mapRiderChampionshipRaw(raw: RiderChampionshipRaw): RiderChampio
     full_name: raw.rider.full_name,
     name_acronym: buildAcronym(raw.rider.full_name),
     team_name: raw.team?.name ?? '',
-    // team_colour is NOT provided by this endpoint — falls back to a
-    // neutral grey until a static team-color lookup table is added.
     team_colour: '666666',
-    headshot_url: null,
+    headshot_url: resolveRiderPhotoUrl(raw.rider.full_name),
     points: raw.points,
     wins: null,
   }
