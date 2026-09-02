@@ -82,7 +82,7 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.motogp\.pulselive\.com\/.*/,
+            urlPattern: /^https:\/\/motogp-proxy\.mhkarami97\.workers\.dev\/.*/,
             handler: "StaleWhileRevalidate",
             options: {
               cacheName: "openMotoGP-runtime",

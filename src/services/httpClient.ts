@@ -43,7 +43,7 @@ class HttpClient {
 
   private constructor() {
     this.client = axios.create({
-      baseURL: 'https://api.motogp.pulselive.com/motogp/v1',
+      baseURL: 'https://motogp-proxy.mhkarami97.workers.dev/v1',
       timeout: 20_000,
       headers: {
         Accept: 'application/json',
