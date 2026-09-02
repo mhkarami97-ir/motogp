@@ -1,4 +1,5 @@
 import { resolveRiderPhotoUrl } from '@/data/riderPhotos'
+import { resolveTeamColor } from '@/data/teamColors'
 
 interface RiderRef {
   full_name: string
@@ -71,14 +72,15 @@ function buildAcronym(fullName: string): string {
 }
 
 export function mapRiderChampionshipRaw(raw: RiderChampionshipRaw): RiderChampionshipEntry {
+  const teamName = raw.team?.name ?? ''
   return {
     position: raw.position,
     rider_number: raw.rider.number,
     broadcast_name: raw.rider.full_name,
     full_name: raw.rider.full_name,
     name_acronym: buildAcronym(raw.rider.full_name),
-    team_name: raw.team?.name ?? '',
-    team_colour: '666666',
+    team_name: teamName,
+    team_colour: resolveTeamColor(teamName),
     headshot_url: resolveRiderPhotoUrl(raw.rider.full_name),
     points: raw.points,
     wins: null,
@@ -89,7 +91,7 @@ export function mapTeamChampionshipRaw(raw: TeamChampionshipRaw): TeamChampionsh
   return {
     position: raw.position,
     team_name: raw.team.name,
-    team_colour: '666666',
+    team_colour: resolveTeamColor(raw.team.name),
     points: raw.points,
     wins: null,
   }
