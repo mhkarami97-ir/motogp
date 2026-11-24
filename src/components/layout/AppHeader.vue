@@ -3,10 +3,12 @@ import { ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import ThemeToggle from '@/components/ui/ThemeToggle.vue'
+import { useReminderStore } from '@/stores'
 
 const { t } = useI18n()
 const route = useRoute()
 const mobileMenuOpen = ref(false)
+const reminderStore = useReminderStore()
 
 const navItems = [
   { name: t('nav.home'), to: '/' },
@@ -44,6 +46,18 @@ const navItems = [
         </nav>
 
         <div class="flex items-center gap-3">
+          <button
+            type="button"
+            class="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface transition-colors"
+            title="یادآور تلگرام"
+            aria-label="یادآور تلگرام"
+            @click="reminderStore.openModal"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .53-.21 1.04-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span v-if="reminderStore.linked" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-MotoGP-dark" />
+          </button>
           <ThemeToggle />
           <button
             class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface transition-colors"
@@ -71,6 +85,17 @@ const navItems = [
         >
           {{ item.name }}
         </RouterLink>
+        <button
+          type="button"
+          class="flex w-full items-center justify-between py-2 px-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-MotoGP-red hover:bg-MotoGP-light-surface-2 dark:hover:bg-MotoGP-surface transition-colors"
+          @click="reminderStore.openModal(); mobileMenuOpen = false"
+        >
+          <span class="flex items-center gap-2">
+            <span>🔔</span>
+            <span>یادآور تلگرام</span>
+          </span>
+          <span v-if="reminderStore.linked" class="text-xs text-emerald-500 font-bold">فعال</span>
+        </button>
       </div>
     </div>
   </header>

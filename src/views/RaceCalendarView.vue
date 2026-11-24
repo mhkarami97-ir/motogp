@@ -2,11 +2,12 @@
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouterLink } from 'vue-router'
-import { useSessionsStore } from '@/stores'
+import { useSessionsStore, useReminderStore } from '@/stores'
 import SkeletonLoader from '@/components/ui/SkeletonLoader.vue'
 import ErrorBoundary from '@/components/ui/ErrorBoundary.vue'
 
 const store = useSessionsStore()
+const reminderStore = useReminderStore()
 const { meetings, isLoading, error } = storeToRefs(store)
 
 onMounted(() => void store.fetchCalendar())
@@ -42,10 +43,20 @@ function statusLabel(meetingKey: string, dateStr: string): string {
 
 <template>
   <div>
-    <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-      <span class="w-1.5 h-7 rounded-full bg-MotoGP-red" />
-      تقویم مسابقات {{ new Date().getFullYear() }}
-    </h1>
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <h1 class="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
+        <span class="w-1.5 h-7 rounded-full bg-MotoGP-red" />
+        تقویم مسابقات {{ new Date().getFullYear() }}
+      </h1>
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-xl bg-MotoGP-red/10 border border-MotoGP-red/20 px-4 py-2 text-xs font-bold text-MotoGP-red transition-all hover:bg-MotoGP-red hover:text-white"
+        @click="reminderStore.openModal"
+      >
+        <span>🔔</span>
+        <span>{{ reminderStore.linked ? 'یادآور تلگرام فعال است' : 'فعال‌سازی یادآور کل فصل در تلگرام' }}</span>
+      </button>
+    </div>
     <SkeletonLoader v-if="isLoading" :rows="10" height="h-20" />
     <ErrorBoundary v-else-if="error" :message="error" :on-retry="store.fetchCalendar" />
     <div v-else class="space-y-3">
