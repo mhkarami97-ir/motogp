@@ -42,7 +42,7 @@ class HttpClient {
   private readonly scheduler = new RequestScheduler()
 
   private constructor() {
-    const defaultBaseUrl = 'https://task-reminders.mhkarami97.workers.dev/api/motogp/proxy'
+    const defaultBaseUrl = 'https://motogp-proxy.mhkarami97.workers.dev'
     const configuredBaseUrl = (import.meta.env.VITE_MOTOGP_API_BASE_URL as string | undefined)?.trim()
     const baseURL = configuredBaseUrl && configuredBaseUrl.length > 0 ? configuredBaseUrl : defaultBaseUrl
 

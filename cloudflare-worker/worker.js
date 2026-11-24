@@ -1,33 +1,52 @@
 /**
  * Cloudflare Worker Proxy for MotoGP API (Pulselive)
- * Fixes CloudFront 403 Forbidden caused by Origin mismatch.
+ * Deployed to: https://motogp-proxy.mhkarami97.workers.dev
+ *
+ * Proxies calls to https://api.motogp.pulselive.com/motogp/v1
+ * and adds CORS headers for frontend access.
  */
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization",
+  "Access-Control-Max-Age": "86400",
+};
+
 export default {
   async fetch(request) {
-    const origin = request.headers.get("Origin") || "*";
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": origin,
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Accept",
-      "Access-Control-Max-Age": "86400",
-    };
-
+    // Handle CORS preflight
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
+      return new Response(null, {
+        status: 204,
+        headers: CORS_HEADERS,
+      });
     }
 
     const url = new URL(request.url);
-    // Forward path and search query to official Pulselive MotoGP API
-    const targetUrl = `https://api.motogp.pulselive.com/motogp/v1${url.pathname}${url.search}`;
+
+    // Normalize path: strip /motogp/v1 or /v1 prefix if present
+    let path = url.pathname;
+    if (path.startsWith("/motogp/v1/")) {
+      path = path.slice("/motogp/v1".length);
+    } else if (path === "/motogp/v1") {
+      path = "/";
+    } else if (path.startsWith("/v1/")) {
+      path = path.slice("/v1".length);
+    } else if (path === "/v1") {
+      path = "/";
+    }
+
+    // Forward to official Pulselive MotoGP API
+    const targetUrl = `https://api.motogp.pulselive.com/motogp/v1${path}${url.search}`;
 
     const headers = new Headers();
     headers.set(
       "User-Agent",
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
     );
-    headers.set("Accept", "application/json");
-    // CloudFront WAF on api.motogp.pulselive.com blocks requests with unexpected Origin.
-    // Overriding Origin & Referer to official motogp domain resolves the 403 block.
+    headers.set("Accept", "application/json, text/plain, */*");
+    // CloudFront WAF requires legitimate Origin/Referer to bypass 403 Forbidden
     headers.set("Origin", "https://www.motogp.com");
     headers.set("Referer", "https://www.motogp.com/");
 
@@ -38,7 +57,7 @@ export default {
       });
 
       const responseHeaders = new Headers(response.headers);
-      for (const [key, value] of Object.entries(corsHeaders)) {
+      for (const [key, value] of Object.entries(CORS_HEADERS)) {
         responseHeaders.set(key, value);
       }
 
@@ -49,10 +68,16 @@ export default {
       });
     } catch (err) {
       return new Response(
-        JSON.stringify({ error: "Upstream fetch failed", details: String(err) }),
+        JSON.stringify({
+          error: "Failed to fetch from upstream MotoGP API",
+          details: String(err),
+        }),
         {
           status: 502,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            ...CORS_HEADERS,
+          },
         }
       );
     }
