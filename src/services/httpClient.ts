@@ -42,8 +42,12 @@ class HttpClient {
   private readonly scheduler = new RequestScheduler()
 
   private constructor() {
+    const defaultBaseUrl = 'https://task-reminders.mhkarami97.workers.dev/api/motogp/proxy'
+    const configuredBaseUrl = (import.meta.env.VITE_MOTOGP_API_BASE_URL as string | undefined)?.trim()
+    const baseURL = configuredBaseUrl && configuredBaseUrl.length > 0 ? configuredBaseUrl : defaultBaseUrl
+
     this.client = axios.create({
-      baseURL: 'https://motogp-proxy.mhkarami97.workers.dev',
+      baseURL,
       timeout: 20_000,
       headers: {
         Accept: 'application/json',
